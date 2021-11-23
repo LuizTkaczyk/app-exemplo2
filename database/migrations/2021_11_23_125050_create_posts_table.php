@@ -15,8 +15,9 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 160); //tabela que aceita string e aceita no máximo 160 caracteres
-            $table->text('content');
+            $table->string('title', 160)->unique(); //tabela que aceita string e aceita no máximo 160 caracteres
+            $table->string('image');
+            $table->text('content')->nullable(); //com nulable o campo é opcional!!!!
             $table->timestamps();
         });
     }

@@ -13,5 +13,5 @@ class Post extends Model
 
     //apenas os valores de title e content serão preechidos na tabela
     
-    protected $fillable = ['title', 'content'];
+    protected $fillable = ['title', 'content','image'];
 }
