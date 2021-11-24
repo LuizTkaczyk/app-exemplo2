@@ -15,6 +15,7 @@ use App\Http\Controllers\PostController;
 |
 */
 
+Route::middleware(['auth'])->group(function(){
 //editando um post no banco
 Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create'); //name usado na index para informar a rota
 
@@ -37,6 +38,8 @@ Route::post('/posts', [PostController::class, 'store'])->name('posts.store'); //
 
 
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+});
+
 
 
 
