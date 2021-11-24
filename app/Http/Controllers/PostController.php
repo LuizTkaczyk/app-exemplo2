@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUpdatePost;
 use Illuminate\Http\Request;
 use App\Models\Post;
-use SebastianBergmann\Environment\Console;
+
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 
 class PostController extends Controller
@@ -40,10 +41,11 @@ class PostController extends Controller
       $data = $request->all();
 
       //criando envio de imagens
-      if($request->image->isValid()){
-                                                                  //capturando a extensão da imagem
-         $nameFile = Str::of($request->title)->slug('-') . '.' .$request->image->getClientOriginalExtension();
-         $image = $request->image->storeAs('posts',  $nameFile);//criando a pasta posts em storage/app/public
+      if ($request->image->isValid()) {
+         //capturando a extensão da imagem
+         $nameFile = Str::of($request->title)->slug('-') . '.' . $request->image->getClientOriginalExtension();
+         $image = $request->image->storeAs('public/posts', $nameFile); //criando a pasta posts em storage/app/public
+         $image = str_replace('public/', '', $image);
          $data['image'] = $image;
       }
 
@@ -82,6 +84,9 @@ class PostController extends Controller
       if (!$post = Post::find($id))
          return redirect()->route('posts.index'); //em caso de não encontrar o post ele retorna a index
 
+      if (Storage::exists($post->image))
+         Storage::delete($post->image);
+
       $post->delete();
 
       return redirect()->route('posts.index')->with('message', 'Post deletado com sucesso'); //em caso de sucesso ao deletar ele tambem volta a index
@@ -110,9 +115,22 @@ class PostController extends Controller
       if (!$post = Post::find($id)) {
          return redirect()->back();
       }
+
+      $data = $request->all();
+
+      if ($request->image && $request->image->isValid()) {
+         if (Storage::exists($post->image))
+            Storage::delete($post->image);
+
+         //capturando a extensão da imagem
+         $nameFile = Str::of($request->title)->slug('-') . '.' . $request->image->getClientOriginalExtension();
+         $image = $request->image->storeAs('public/posts', $nameFile); //criando a pasta posts em storage/app/public
+         $image = str_replace('public/', '', $image);
+         $data['image'] = $image;
+      }
       //dd("editando o post: {{$post->id}}");
 
-      $post->update($request->all());
+      $post->update($data);
       return redirect()->route('posts.index')->with('message', 'Post editado com sucesso');
    }
 

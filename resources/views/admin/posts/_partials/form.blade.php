@@ -17,4 +17,4 @@
     placeholder="Conteúdo">{{ $post->content ?? old('content') }}</textarea>
 <br>
 <br>
-<button type="submit">Editar</button>
+<button type="submit">Salvar</button>

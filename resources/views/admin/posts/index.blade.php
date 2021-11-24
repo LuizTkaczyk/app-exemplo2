@@ -23,8 +23,11 @@
 
     {{-- Captura o conteudo da variavel posts e insere na variavel post --}}
     @foreach ($posts as $post)
-        <p><img width="320px" src="{{ url("storage/{$post->image}") }}" alt="{{ $post->title }}">
+        <p>
+            <img src="{{ url("storage/{$post->image}") }}" alt="{{ $post->title }}" style="max-width: 100px">
+            
             {{ $post->title }}
+            
             <br>
             <button> <a href="{{ route('posts.show', $post->id) }}" style="text-decoration: none">Ver detalhes</a>
             </button>
